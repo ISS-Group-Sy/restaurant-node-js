@@ -21,7 +21,6 @@ module.exports.register_post = async (req, res, next) => {
         }
 
         const newUser = await User.create({ name, hashPassword: password, email});
-        await newUser.save();
 
         const { accessToken, refreshToken} = createTokens(newUser._id);
         const token = new Token({
