@@ -14,13 +14,13 @@ const createTokens = (id) => {
 
 module.exports.register_post = async (req, res, next) => {
     try {
-        const { username, password, confirmPassword, email} = req.body;
+        const { name, password, confirmPassword, email} = req.body;
 
         if (password != confirmPassword) {
             return res.status(400).json({ message: 'Password and confirm password do not match' });
         }
 
-        const newUser = await User.create({ username, hashPassword: password, email});
+        const newUser = await User.create({ name, hashPassword: password, email});
         await newUser.save();
 
         const { accessToken, refreshToken} = createTokens(newUser._id);
