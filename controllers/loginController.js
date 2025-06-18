@@ -3,6 +3,7 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
 const Token = require('../models/token');
+const { createAndSendOTP } = require('../services/otpService');
 
 const createTokens = (id) => {
     const accessToken = jwt.sign( { id }, process.env.secret, {
@@ -37,6 +38,7 @@ module.exports.login_post = async (req, res, next) => {
         }
         const { accessToken, refreshToken } = createTokens(foundUser._id);
 
+        await createAndSendOTP(newUser._id, newUser.email);
         // edit refresh token in database 
         const newToken = new Token({
             userId: foundUser._id,
