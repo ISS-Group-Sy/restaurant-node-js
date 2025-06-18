@@ -7,7 +7,7 @@ const { createAndSendOTP } = require('../services/otpService');
 
 const createTokens = (id) => {
     const accessToken = jwt.sign( { id }, process.env.secret, {
-        expiresIn: '5m'
+        expiresIn: '1h'
     });
 
     const refreshToken = jwt.sign( { id }, process.env.secret, {});
@@ -38,7 +38,7 @@ module.exports.login_post = async (req, res, next) => {
         }
         const { accessToken, refreshToken } = createTokens(foundUser._id);
 
-        await createAndSendOTP(newUser._id, newUser.email);
+        await createAndSendOTP(foundUser._id, foundUser.email);
         // edit refresh token in database 
         const newToken = new Token({
             userId: foundUser._id,
@@ -49,6 +49,6 @@ module.exports.login_post = async (req, res, next) => {
         res.status(201).json( {message: 'Successful login', refreshToken, accessToken});
     }
     catch(err) {
-        nexr(err);
+        next(err);
     }
 };

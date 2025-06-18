@@ -6,7 +6,7 @@ const { createAndSendOTP } = require('../services/otpService');
 
 const createTokens = (id) => {
     const accessToken = jwt.sign( { id }, process.env.secret, {
-        expiresIn: '5m'
+        expiresIn: '1h'
     });
 
     const refreshToken = jwt.sign( { id }, process.env.secret, {});
