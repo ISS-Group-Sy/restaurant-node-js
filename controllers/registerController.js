@@ -1,17 +1,6 @@
 const express = require('express');
 const User = require('../models/user');
-const jwt = require('jsonwebtoken');
-const Token = require('../models/token');
 const { createAndSendOTP } = require('../services/otpService');
-
-const createTokens = (id) => {
-    const accessToken = jwt.sign( { id }, process.env.secret, {
-        expiresIn: '1h'
-    });
-
-    const refreshToken = jwt.sign( { id }, process.env.secret, {});
-    return {accessToken, refreshToken};
-};
 
 module.exports.register_post = async (req, res, next) => {
     try {
@@ -23,18 +12,12 @@ module.exports.register_post = async (req, res, next) => {
 
         const newUser = await User.create({ name, hashPassword: password, email});
 
-        await createAndSendOTP(newUser._id, newUser.email);
+        await createAndSendOTP(newUser.email);
 
-        const { accessToken, refreshToken} = createTokens(newUser._id);
-        const token = new Token({
-            userId: newUser._id,
-            refreshToken,
-        });
-        token.save();
-
-        res.status(201).json( {message: 'Successful registration', refreshToken, accessToken});
+        res.status(201).json( {message: 'Otp sent to email, Please verify to complete registeration'});
     }
     catch(err) {
         next(err);
     }
 }
+

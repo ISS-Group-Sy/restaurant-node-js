@@ -1,18 +1,8 @@
 const User = require('../models/user');
-const EmailVerification = require('../models/emailVerification');
 const { createAndSendOTP } = require('../services/otpService');
 const bcryptjs = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const Token = require('../models/token');
-
-const createTokens = (id) => {
-    const accessToken = jwt.sign( { id }, process.env.secret, {
-        expiresIn: '1h'
-    });
-
-    const refreshToken = jwt.sign( { id }, process.env.secret, {});
-    return {accessToken, refreshToken};
-};
+const { createTokens } = require('../services/tokenService');
 
 exports.requestPasswordReset_post = async (req, res) => {
     try {
@@ -49,7 +39,6 @@ exports.resetPassword_post = async (req, res) => {
         }
 
         user.hashPassword = newPassword;
-        user.isVerified = true; 
         await user.save();
 
         const { accessToken, refreshToken } = createTokens(user._id);

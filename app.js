@@ -3,10 +3,9 @@ const app = express();
 const connectDB = require('./config/db'); 
 const loginRouter = require('./routes/loginRoute');
 const registerRouter = require('./routes/registerRoute');
-const emailVerfictionRouter = require('./routes/emailVerificationRoutes');
+const emailVerfictionRouter = require('./routes//emailVerfictionRoutes');
 const changePasswordRouter = require('./routes/changePasswordRoutes');
 const refreshTokenRouter = require('./routes/refreshTokenRoutes');
-const esetPasswordRouterr = require('./routes/resetPasswordRoutes');
 const resetPasswordRouterr = require('./routes/resetPasswordRoutes');
 
 app.use(express.json());

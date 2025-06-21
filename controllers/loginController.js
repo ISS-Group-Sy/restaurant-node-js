@@ -1,18 +1,8 @@
 const express = require('express');
 const User = require('../models/user');
-const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
 const Token = require('../models/token');
-const { createAndSendOTP } = require('../services/otpService');
-
-const createTokens = (id) => {
-    const accessToken = jwt.sign( { id }, process.env.secret, {
-        expiresIn: '1h'
-    });
-
-    const refreshToken = jwt.sign( { id }, process.env.secret, {});
-    return {accessToken, refreshToken};
-};
+const { createTokens } = require('../services/tokenService');
 
 module.exports.login_post = async (req, res, next) => {
     try {
@@ -38,15 +28,16 @@ module.exports.login_post = async (req, res, next) => {
         }
         const { accessToken, refreshToken } = createTokens(foundUser._id);
 
-        await createAndSendOTP(foundUser._id, foundUser.email);
         // edit refresh token in database 
         const newToken = new Token({
             userId: foundUser._id,
             refreshToken,
         });
         await newToken.save();
-
-        res.status(201).json( {message: 'Successful login', refreshToken, accessToken});
+        if (foundUser.isVerified)
+          res.status(201).json( {message: 'Successful login', refreshToken, accessToken, isVerified: foundUser.isVerified});
+        else 
+        res.status(201).json( { message: "Successful login, you must to verify your email"} );
     }
     catch(err) {
         next(err);
