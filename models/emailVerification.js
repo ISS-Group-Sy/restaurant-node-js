@@ -2,8 +2,7 @@ const mongoose = require('mongoose');
 
 const emailVerfictionSchema = new mongoose.Schema({
     email: {
-        type: mongoose.Schema.Types.ObjectId,
-        red: 'User',
+        type: String,
         required: true,
     },
     otpCode: {
@@ -16,4 +15,4 @@ const emailVerfictionSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('EmailVerfiction', emailVerfictionSchema);
+module.exports = mongoose.model('EmailVerification', emailVerfictionSchema);

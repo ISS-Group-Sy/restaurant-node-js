@@ -28,7 +28,7 @@ async function createAndSendOTP(email) {
   const otpCode = generateOTP();
   await EmailVerification.deleteMany({ email });
   // ends after 10 minutes
-  const expiresAt = new Date(Date.now() + 10 * 60 * 1000); 
+  const expiresAt = new Date(Date.now() + 60 * 60 * 1000); 
   await EmailVerification.create({ email, otpCode, expiresAt });
 
   await sendOTPEmail(email, otpCode);
