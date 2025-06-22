@@ -1,7 +1,6 @@
 const express = require('express');
 const MenuItem = require('../models/menu_item');
 
-// Get all menu items مع pagination
 module.exports.getAllMenuItems_get = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -32,20 +31,15 @@ module.exports.getAllMenuItems_get = async (req, res) => {
   }
 };
 
-// Create a new menu item مع تحقق دقيق
 module.exports.createMenuItem_post = async (req, res) => {
   try {
     const { name, description, price, category } = req.body;
     const imageFile = req.file;
 
-    // تحقق من وجود كل الحقول
     if (!name || !description || !price || !category || !imageFile) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
-    // تحقق من نوع الحقول
-
-    // name: ليس فارغ وطوله ≤ 50
     if (typeof name !== 'string' || name.trim() === '') {
       return res.status(400).json({ message: 'Name must not be empty' });
     }
@@ -53,12 +47,10 @@ module.exports.createMenuItem_post = async (req, res) => {
       return res.status(400).json({ message: 'Name cannot exceed 50 characters' });
     }
 
-    // description: نص وليس فارغ
     if (typeof description !== 'string' || description.trim() === '') {
       return res.status(400).json({ message: 'Description must not be empty' });
     }
 
-    // price: يجب أن يكون رقم موجب
     const priceNum = parseFloat(price);
     if (isNaN(priceNum)) {
       return res.status(400).json({ message: 'Price must be a valid number' });
@@ -67,12 +59,10 @@ module.exports.createMenuItem_post = async (req, res) => {
       return res.status(400).json({ message: 'Price cannot be negative' });
     }
 
-    // category: نص وليس فارغ
     if (typeof category !== 'string' || category.trim() === '') {
       return res.status(400).json({ message: 'Category must not be empty' });
     }
 
-    // صورة واحدة فقط
     if (!imageFile) {
       return res.status(400).json({ message: 'Image file is required' });
     }
@@ -99,7 +89,6 @@ module.exports.createMenuItem_post = async (req, res) => {
   }
 };
 
-// Update menu item مع تحقق مشابه
 module.exports.updateMenuItem_patch = async (req, res) => {
   try {
     const { id } = req.params;
@@ -111,7 +100,6 @@ module.exports.updateMenuItem_patch = async (req, res) => {
       return res.status(404).json({ message: 'Menu item not found' });
     }
 
-    // تحقق الحقول المرسلة فقط (اختياري)
     if (name !== undefined) {
       if (typeof name !== 'string' || name.trim() === '') {
         return res.status(400).json({ message: 'Name must not be empty if provided' });
@@ -165,7 +153,6 @@ module.exports.updateMenuItem_patch = async (req, res) => {
   }
 };
 
-// Delete menu item
 module.exports.deleteMenuItem_delete = async (req, res) => {
   try {
     const { id } = req.params;
