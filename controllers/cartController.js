@@ -65,3 +65,21 @@ module.exports.updateCard_patch = async (req, res) => {
         res.status(500).json( {message: 'Failed to update card', error: err.message });
     }
 }
+
+module.exports.CartItems_get = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const cart = await Cart.findOne({ user_id: userId });
+        if (!cart) {
+            return res.status(404).json({ message: 'There is no cart for this user' });
+        }
+        const cartItems = await CartItem.find( {cart_id: cart._id } );
+        res.status(200).json( {
+            message: 'get cart items successfully',
+            data: cartItems
+        });
+    }
+    catch(err) {
+        res.status(500).json( {message: 'failed to gat cart items', error: err.message});
+    }
+}
