@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // crate order schema 
-const ordeeSchema = new mongoose.Schema({
+const orderSchema = new mongoose.Schema({
      user_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user',
@@ -14,7 +14,9 @@ const ordeeSchema = new mongoose.Schema({
     },
     status: {
         type: String,
+        enum: ['pending', 'shipped', 'delivered'],
+        default: 'pending'
     }
-}, { timestamps});
+},  {timestamps: true});
 
 module.exports = mongoose.model('Order', orderSchema);

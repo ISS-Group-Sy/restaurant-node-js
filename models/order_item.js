@@ -22,6 +22,6 @@ const orderItemSchema = new mongoose.Schema({
         required: true,
         min: [0, 'Unit price cannot be negative number'],
     }
-}, {timestamps});
+}, {timestamps: true});
 
 module.exports = mongoose.model('OrderItem', orderItemSchema);
