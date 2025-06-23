@@ -1,6 +1,38 @@
 const Order = require('../models/order');
 const OrderItems = require('../models/order_item');
 
+
+module.exports.Orders_get = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    if (!userId) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    const orders = await Order.find({ user_id: userId }).sort({ createdAt: -1 });
+
+    const ordersWithItems = await Promise.all(
+      orders.map(async (order) => {
+        const items = await OrderItems.find({ order_id: order._id });
+
+        return {
+          ...order.toObject(),
+          items: items
+        };
+      })
+    );
+
+    res.status(200).json({
+      message: 'Orders fetched successfully',
+      orders: ordersWithItems
+    });
+
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch orders', error: err.message });
+  }
+};
+
 module.exports.createOrder_post = async (req, res) => {
   try {
     const userId = req.user.id;
