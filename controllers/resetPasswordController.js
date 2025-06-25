@@ -13,7 +13,7 @@ exports.requestPasswordReset_post = async (req, res) => {
             return res.status(404).json({ message: 'The email is not found' });
         }
 
-        await createAndSendOTP(user._id, email);
+        await createAndSendOTP(email);
 
         res.status(200).json({ message: 'Verification code has been sent to your email' });
     } catch (error) {

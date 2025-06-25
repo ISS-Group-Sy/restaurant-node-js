@@ -19,8 +19,7 @@ module.exports.change_password_patch = async (req, res) => {
             return res.status(400).json({ message: 'Old password is incorrect' });
         }
 
-        const salt = await bcryptjs.genSalt();
-        user.hashPassword = await bcryptjs.hash(newPassword, salt);
+        user.hashPassword = newPassword;
         await user.save();
 
         res.status(200).json( { message: 'Password updated successfully'} );
