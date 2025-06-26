@@ -1,6 +1,7 @@
 const Order = require('../models/order');
 const OrderItems = require('../models/order_item');
-
+const Cart = require('../models/cart');
+const CartItem = require('../models/cart_item');
 
 module.exports.Orders_get = async (req, res) => {
   try {
@@ -36,19 +37,21 @@ module.exports.Orders_get = async (req, res) => {
 module.exports.createOrder_post = async (req, res) => {
   try {
     const userId = req.user.id;
-    const items = req.body.items;
-
     if (!userId) {
       return res.status(401).json({ message: 'Unauthorized: No user ID found' });
     }
-
-    if (!Array.isArray(items) || items.length === 0) {
-      return res.status(400).json({ message: 'Order must contain at least one item' });
+    const cart = await Cart.find( {user_id: userId });
+    if (!cart) {
+      return res.status(404).json( {message: 'There is no cart for this user' } ); 
+    }
+    const cartItems = await CartItem.find( {cart_id: cart._id});
+    if (cartItems.lemgth === 0) {
+      return res.status(400).json({ message: 'Cart is empty' });
     }
 
     let total_price = 0;
 
-    for (const item of items) {
+    for (const item of cartItems) {
       if (
         !item.menu_item_id ||
         typeof item.quantity !== 'number' ||
@@ -68,7 +71,7 @@ module.exports.createOrder_post = async (req, res) => {
       status: 'pending',
     });
 
-    const orderItems = items.map(item => ({
+    const orderItems = cartItems.map(item => ({
       order_id: order._id,
       menu_item_id: item.menu_item_id,
       quantity: item.quantity,
@@ -77,6 +80,9 @@ module.exports.createOrder_post = async (req, res) => {
 
     const savedOrderItems = await OrderItems.insertMany(orderItems);
 
+    
+    await CartItem.deleteMany({ cart_id: cart._id });
+    
     res.status(201).json({
       message: 'Order created successfully',
       order: order,
