@@ -93,3 +93,38 @@ module.exports.createOrder_post = async (req, res) => {
     res.status(500).json({ message: 'Failed to create order', error: err.message }); 
   }
 };
+
+module.exports.getOrderById = async (req,res) => {
+  try {
+    const orderId = req.params.id;
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(404).json( {message: 'Order not found'});
+    }
+    const itemsOrder = await OrderItems.find( {order_id: orderId});
+    res.status(200).json( { order, itemsOrder} );
+  }
+  catch(err) {
+    res.status(500).json( { message: 'Internal server error', error: err.message});
+  }
+}
+
+module.exports.updateOrderStatus = async (req, res) => {
+  const { status } = req.body;
+  const allwedStatueORder = ['pending', 'shipped', 'delivered'];
+  if (!allwedStatueORder.includes(status)) {
+    return res.status(400).json( {message: 'Invalid status value'} );
+  }
+  
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json( {message: 'Order not found'} );
+    }
+    order.status = status;
+    res.status(200).json({ message: 'Status updated', order });
+  }
+  catch(err) {
+    res.status(500).json({ message: 'Internal server error', error: err.message });
+  }
+}
