@@ -3,25 +3,10 @@ const MenuItem = require('../models/menu_item');
 
 module.exports.getAllMenuItems_get = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const skip = (page - 1) * limit;
-
-    const menuItems = await MenuItem.find()
-      .skip(skip)
-      .limit(limit)
-      .sort({ createdAt: -1 });
-
-    const totalMenuItems = await MenuItem.countDocuments();
-
+    const menuItems = await MenuItem.find();
     res.status(200).json({
       message: 'Menu items fetched successfully',
       data: menuItems,
-      pagination: {
-        totalMenuItems,
-        currentPage: page,
-        totalPages: Math.ceil(totalMenuItems / limit),
-      },
     });
   } catch (err) {
     res.status(500).json({

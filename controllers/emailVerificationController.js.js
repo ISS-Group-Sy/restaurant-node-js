@@ -6,14 +6,12 @@ const Token = require('../models/token');
 module.exports.verify_email_post = async (req, res) => {
   try {
     const { email, otpCode } = req.body;
-    console.log(req.body);
     const user = await User.findOne({email});
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
     const record = await EmailVerification.findOne({email});
-    console.log(record);
     if (!record || record.otpCode !== otpCode) {
       return res.status(400).json({ message: 'Invalid or expired OTP code' });
     }

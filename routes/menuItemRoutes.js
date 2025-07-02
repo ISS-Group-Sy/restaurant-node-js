@@ -6,7 +6,7 @@ const upload = require('../middleware/upload');
 
 menuItemRouter.get('/api/get-menu-items', menuItemController.getAllMenuItems_get);
 menuItemRouter.post('/api/create-menu-item', upload.single('image'), isAuth, menuItemController.createMenuItem_post);
-menuItemRouter.patch('/api/update-menu-item/:id', upload.single('image'), menuItemController.updateMenuItem_patch);
-menuItemRouter.delete('/api/delete-menu-item/:id', menuItemController.deleteMenuItem_delete);
+menuItemRouter.patch('/api/update-menu-item/:id', upload.single('image'), isAuth, menuItemController.updateMenuItem_patch);
+menuItemRouter.delete('/api/delete-menu-item/:id', isAuth, menuItemController.deleteMenuItem_delete);
 
 module.exports = menuItemRouter;
