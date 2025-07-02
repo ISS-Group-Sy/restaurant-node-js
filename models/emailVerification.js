@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const emailVerfictionSchema = new mongoose.Schema({
-    userId: {
+    email: {
         type: mongoose.Schema.Types.ObjectId,
         red: 'User',
         required: true,
