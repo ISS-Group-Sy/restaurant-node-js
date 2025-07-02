@@ -1,18 +1,20 @@
 const User = require('../models/user');
 const EmailVerification = require('../models/emailVerification');
 const { createTokens } = require('../services/tokenService');
+const Token = require('../models/token');
 
-module.exports.verify_email_post = async (req, res, next) => {
+module.exports.verify_email_post = async (req, res) => {
   try {
     const { email, otpCode } = req.body;
-
-    const user = await User.findOne({ email });
+    console.log(req.body);
+    const user = await User.findOne({email});
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const record = await EmailVerification.findOne({ email, otpCode });
-    if (!record) {
+    const record = await EmailVerification.findOne({email});
+    console.log(record);
+    if (!record || record.otpCode !== otpCode) {
       return res.status(400).json({ message: 'Invalid or expired OTP code' });
     }
 
@@ -28,7 +30,7 @@ module.exports.verify_email_post = async (req, res, next) => {
 
     const { accessToken, refreshToken } = createTokens(user._id);
     const newToken = new Token({
-      userId: foundUser._id,
+      userId: user._id,
       refreshToken,
     });
     await newToken.save();
@@ -40,6 +42,6 @@ module.exports.verify_email_post = async (req, res, next) => {
       isVerified: user.isVerified
     });
   } catch (err) {
-    res.status(500).json( { message: 'internal serer error' } ); 
+    res.status(500).json( { message: 'internal server error' } ); 
   }
 };

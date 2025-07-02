@@ -30,6 +30,6 @@ const menuItemSchema = new mongoose.Schema({
         isLowercase: true,
         trim: true,
     }
-}, {timestamps});
+}, { timestamps: true });
 
-module.exports = mongoose.model('menuItem', menuItemSchema);
+module.exports = mongoose.model('MenuItem', menuItemSchema);
