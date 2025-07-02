@@ -6,7 +6,7 @@ const bcryptjs = require('bcryptjs');
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: [true, 'Please enter your username'],
+        required: [true, 'Please enter your name'],
         unique: true,
         trim: true,
     },
@@ -27,6 +27,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ['user', 'admin'],
         default: 'user',
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
     }
 });
 

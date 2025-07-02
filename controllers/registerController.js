@@ -2,6 +2,7 @@ const express = require('express');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const Token = require('../models/token');
+const { createAndSendOTP } = require('../services/otpService');
 
 const createTokens = (id) => {
     const accessToken = jwt.sign( { id }, process.env.secret, {
@@ -21,7 +22,8 @@ module.exports.register_post = async (req, res, next) => {
         }
 
         const newUser = await User.create({ name, hashPassword: password, email});
-        await newUser.save();
+
+        await createAndSendOTP(newUser._id, newUser.email);
 
         const { accessToken, refreshToken} = createTokens(newUser._id);
         const token = new Token({
