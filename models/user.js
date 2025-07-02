@@ -4,7 +4,7 @@ const bcryptjs = require('bcryptjs');
 
 // create user scheam with basic validaions
 const userSchema = new mongoose.Schema({
-    username: {
+    name: {
         type: String,
         required: [true, 'Please enter your username'],
         unique: true,
