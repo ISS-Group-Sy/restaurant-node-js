@@ -8,6 +8,7 @@ const changePasswordRouter = require('./routes/changePasswordRoutes');
 const refreshTokenRouter = require('./routes/refreshTokenRoutes');
 const resetPasswordRouterr = require('./routes/resetPasswordRoutes');
 const menuItemRouter = require('./routes/menuItemRoutes');
+const cartRouter = require('./routes/cartRoutes');
 
 app.use(express.json());
 connectDB();  
@@ -19,6 +20,7 @@ app.use(changePasswordRouter);
 app.use(refreshTokenRouter);
 app.use(resetPasswordRouterr);
 app.use(menuItemRouter);
+app.use(cartRouter);
 
 app.listen(3000, '0.0.0.0', () => {
     console.log("Server is running on port 3000");
