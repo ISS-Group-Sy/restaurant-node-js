@@ -11,9 +11,11 @@ const menuItemRouter = require('./routes/menuItemRoutes');
 const cartRouter = require('./routes/cartRoutes');
 const orderRouter = require('./routes/orderRoutes');
 const profilRouter = require('./routes/profileRoutes');
+const path = require('path');
 
 app.use(express.json());
 connectDB();  
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use(registerRouter);
 app.use(loginRouter);

@@ -28,7 +28,7 @@ exports.resetPassword_post = async (req, res) => {
         if (newPassword !== confirmPassword) {
             return res.status(400).json( { message: 'New password and confirmation do not match'} );  
         }
-
+        
         const user = await User.findOne( { email });
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
