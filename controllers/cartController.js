@@ -5,7 +5,7 @@ const CartItem = require('../models/cart_item');
 module.exports.addToCart_post = async (req, res) => {
     try {
         const userId = req.user.id;
-        const {menu_item_id, quantity, unit_price} = req.body;
+        const {menu_item_id, quantity} = req.body;
         const menuItem = await MenuItem.findById(menu_item_id);
         if (!menuItem) {
             return res.status(404).json({ message: 'Menu item not found'});
@@ -27,7 +27,7 @@ module.exports.addToCart_post = async (req, res) => {
                 cart_id: cart._id,
                 menu_item_id: menuItem._id,
                 quantity,
-                unit_price
+                unit_price: menuItem.price
             });
         }
         res.status(201).json( {message: 'cart item added', cartItem: cartItem} );
