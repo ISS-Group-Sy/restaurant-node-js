@@ -1,5 +1,6 @@
 const express = require('express');
 const MenuItem = require('../models/menu_item');
+const cloudinary = require('../config/cloudinary');
 
 module.exports.getAllMenuItems_get = async (req, res) => {
   try {
@@ -52,7 +53,10 @@ module.exports.createMenuItem_post = async (req, res) => {
       return res.status(400).json({ message: 'Image file is required' });
     }
 
-    const imagePath = `/images/${imageFile.filename}`;
+    const result = await cloudinary.uploader.upload(imageFile.path, {
+      folder: 'menu_items' 
+    });
+    const imagePath = result.secure_url;
 
     const newMenuItem = await MenuItem.create({
       image: imagePath,
@@ -121,8 +125,17 @@ module.exports.updateMenuItem_patch = async (req, res) => {
     }
 
     if (imageFile) {
-      item.image = `/images/${imageFile.filename}`;
-    }
+      if (item.image && item.image.includes('res.cloudinary.com')) {
+        const publicId = item.image.split('/').slice(-1)[0].split('.')[0];
+        await cloudinary.uploader.destroy(`menu_items/${publicId}`);
+      }
+
+    const result = await cloudinary.uploader.upload(imageFile.path, {
+      folder: 'menu_items'
+    });
+
+    item.image = result.secure_url;
+  }
 
     await item.save();
 
