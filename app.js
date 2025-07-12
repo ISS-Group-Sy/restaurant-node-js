@@ -14,6 +14,7 @@ const cartRouter = require('./routes/cartRoutes');
 const orderRouter = require('./routes/orderRoutes');
 const profilRouter = require('./routes/profileRoutes');
 const path = require('path');
+const logoutRouter = require('./routes/logoutRoutes');
 
 app.use(express.json());
 connectDB();  
@@ -29,6 +30,7 @@ app.use(menuItemRouter);
 app.use(cartRouter);
 app.use(orderRouter);
 app.use(profilRouter);
+app.use(logoutRouter);
 
 app.listen(3000, '0.0.0.0', () => {
     console.log("Server is running on port 3000");
