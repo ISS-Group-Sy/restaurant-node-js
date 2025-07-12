@@ -54,8 +54,11 @@ module.exports.createMenuItem_post = async (req, res) => {
     }
 
     const result = await cloudinary.uploader.upload(imageFile.path, {
-      folder: 'menu_items' 
+      folder: 'menu_items',
+      quality: 'auto:good',     
+      fetch_format: 'auto'    
     });
+
     const imagePath = result.secure_url;
 
     const newMenuItem = await MenuItem.create({
@@ -130,9 +133,12 @@ module.exports.updateMenuItem_patch = async (req, res) => {
         await cloudinary.uploader.destroy(`menu_items/${publicId}`);
       }
 
-    const result = await cloudinary.uploader.upload(imageFile.path, {
-      folder: 'menu_items'
-    });
+      const result = await cloudinary.uploader.upload(imageFile.path, {
+        folder: 'menu_items',
+        quality: 'auto:good',      
+        fetch_format: 'auto'    
+      });
+
 
     item.image = result.secure_url;
   }
