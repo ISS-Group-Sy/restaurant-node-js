@@ -40,11 +40,15 @@ module.exports.createOrder_post = async (req, res) => {
     if (!userId) {
       return res.status(401).json({ message: 'Unauthorized: No user ID found' });
     }
-    const cart = await Cart.find( {user_id: userId });
+    console.log(userId);
+    const cart = await Cart.findOne( {user_id: userId });
+    console.log(cart);
+    console.log(cart._id);
     if (!cart) {
       return res.status(404).json( {message: 'There is no cart for this user' } ); 
     }
     const cartItems = await CartItem.find( {cart_id: cart._id});
+    console.log(cartItems);
     if (cartItems.lemgth === 0) {
       return res.status(400).json({ message: 'Cart is empty' });
     }
@@ -78,6 +82,7 @@ module.exports.createOrder_post = async (req, res) => {
       unit_price: item.unit_price,
     }));
 
+    console.log('x=', cartItems);
     const savedOrderItems = await OrderItems.insertMany(orderItems);
 
     
