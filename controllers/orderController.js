@@ -40,10 +40,7 @@ module.exports.createOrder_post = async (req, res) => {
     if (!userId) {
       return res.status(401).json({ message: 'Unauthorized: No user ID found' });
     }
-    console.log(userId);
     const cart = await Cart.findOne( {user_id: userId });
-    console.log(cart);
-    console.log(cart._id);
     if (!cart) {
       return res.status(404).json( {message: 'There is no cart for this user' } ); 
     }

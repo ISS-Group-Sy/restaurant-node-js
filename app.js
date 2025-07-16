@@ -15,8 +15,14 @@ const orderRouter = require('./routes/orderRoutes');
 const profilRouter = require('./routes/profileRoutes');
 const path = require('path');
 const logoutRouter = require('./routes/logoutRoutes');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
+
+
 
 app.use(express.json());
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 connectDB();  
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
